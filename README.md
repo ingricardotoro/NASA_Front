@@ -1,3 +1,8 @@
+# Web App to show a Picture Day From NASA'API
+# Developer by Marvin Ricardo Toro for PartnetHero
+# Started at 29-oct-2020
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
