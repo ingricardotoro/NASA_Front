@@ -1,0 +1,10 @@
+.picturebox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    margin: auto;
+    width: 90vw;
+    text-align: center;
+    margin: auto;
+}

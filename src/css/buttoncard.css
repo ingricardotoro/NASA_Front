@@ -1,0 +1,8 @@
+.buttoncard {
+    width: 100px;
+    height: 100vh;
+    align-items: center;
+    align-content: center;
+    display: flex;
+    min-width: 150px;
+}
