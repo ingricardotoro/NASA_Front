@@ -13,7 +13,6 @@ export default function Dateselect(props) {
 
    const handleDateChange = (date) => {
     date=format(new Date(date), 'yyyy-MM-dd')  
-   // alert(date)
     props.setSelectedDate(date);
   };
 
