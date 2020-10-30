@@ -1,8 +1,23 @@
 .buttoncard {
-    width: 100px;
-    height: 100vh;
-    align-items: center;
-    align-content: center;
     display: flex;
-    min-width: 150px;
+    height: 70vh;
+    align-items: center;
+    text-align: center;
+    align-self: center;
+    align-content: space-between;
+    flex-direction: column;
+}
+
+.buttoncard>p {
+    padding-left: 20px;
+    width: 100%;
+}
+
+.toCenter {
+    padding-left: 20px;
+    width: 100%;
+}
+
+.align {
+    flex: 1 !important;
 }

@@ -1,4 +1,4 @@
-.picturebox {
+/*.picturebox {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -7,4 +7,29 @@
     width: 90vw;
     text-align: center;
     margin: auto;
+}*/
+
+@media screen and (max-width: 600px) {
+    .column {
+        width: 100%;
+    }
+}
+
+.top {
+    padding-top: 30px;
+    background-color: darkcyan;
+}
+
+.column {
+    float: left;
+    text-align: center;
+}
+
+.left,
+.right {
+    width: 25%;
+}
+
+.middle {
+    width: 50%;
 }
