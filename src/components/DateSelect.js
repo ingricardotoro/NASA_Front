@@ -8,8 +8,9 @@ import {
 } from '@material-ui/pickers';
 
 export default function Dateselect() {
+    const today = Date.now();
   // The first commit of Material-UI
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [selectedDate, setSelectedDate] = React.useState(new Date(today));
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -21,7 +22,7 @@ export default function Dateselect() {
         <KeyboardDatePicker
           disableToolbar
           variant="inline"
-          format="MM/dd/yyyy"
+          format="yyyy/MM/dd"
           margin="normal"
           id="date-picker-inline"
           label="Date picker inline"
