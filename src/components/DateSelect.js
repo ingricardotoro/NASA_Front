@@ -1,4 +1,5 @@
 import 'date-fns';
+import { format } from 'date-fns'
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
@@ -7,14 +8,15 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-export default function Dateselect() {
-    const today = Date.now();
-  // The first commit of Material-UI
-  const [selectedDate, setSelectedDate] = React.useState(new Date(today));
+export default function Dateselect(props) {
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+
+   const handleDateChange = (date) => {
+    date=format(new Date(date), 'yyyy-MM-dd')  
+   // alert(date)
+    props.setSelectedDate(date);
   };
+
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -26,7 +28,7 @@ export default function Dateselect() {
           margin="normal"
           id="date-picker-inline"
           label="Date picker inline"
-          value={selectedDate}
+          value={props.selectedDate}
           onChange={handleDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change date',

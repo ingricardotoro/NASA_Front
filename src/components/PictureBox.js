@@ -13,13 +13,18 @@ import DateSelect from './DateSelect';
 
 function PictureBox() {
 
+    const today = Date.now();
+    const [selectedDate, setSelectedDate] = useState(new Date(today))
+
+
     const [image, setImage] = useState('')
     const [date, setDate] = useState('')
     const [title, setTitle] = useState('')
     const [explanation, setExplanation] = useState('')
 
     useEffect(() => {
-        fetch("https://api.nasa.gov/planetary/apod?api_key=fiM5A29M56jzWZaeNe9MZp2Wp7V7yu7jHZlqS5GS&date=2020-10-27")
+
+        fetch(`https://api.nasa.gov/planetary/apod?api_key=fiM5A29M56jzWZaeNe9MZp2Wp7V7yu7jHZlqS5GS&date=${selectedDate}`)
         .then(response => response.json())
         .then(data => {
             setImage(data.url)
@@ -29,7 +34,7 @@ function PictureBox() {
             console.log(data)
          });
        
-    }, [])
+    }, [selectedDate])
 
 
     return (
@@ -40,11 +45,11 @@ function PictureBox() {
                 <div className="buttoncard" >
 
                     <IconButton className="toCenter align" aria-label="Before Image">
-                         <ArrowBack fontSize="large" />Back
+                         <ArrowBack fontSize="large" />Prev Day
                     </IconButton>
 
                     <IconButton className="toCenter align" aria-label="Add To Favorite">
-                         <Favorite fontSize="large" />Add
+                         <Favorite fontSize="large" />Add to Favorite
                     </IconButton>
 
                 </div>
@@ -58,11 +63,11 @@ function PictureBox() {
                 <div className="buttoncard">
 
                     <IconButton className="toCenter align" aria-label="Next Image">
-                         <ArrowForward fontSize="large" />Next 
+                         <ArrowForward fontSize="large" />Next Day
                     </IconButton>
                     
                     <div className=" toCenter align">
-                        <DateSelect />
+                        <DateSelect selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                     </div>
 
                 </div> 
