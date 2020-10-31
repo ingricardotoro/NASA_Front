@@ -17,8 +17,7 @@ import '../css/picturebox.css'
 import '../css/buttoncard.css'
 import DateSelect from './DateSelect';
 import NotFound from './NotFound';
-//import ModalFavorites from './ModalFavorites';
-
+import Favorites from './Favorites';   
 
 
 function PictureBox() {
@@ -129,8 +128,10 @@ function PictureBox() {
 
                 </div> 
             </div>
-           
+
         </div>
+
+        {<Favorites />}
 
         <Modal
             aria-labelledby="Save Image"
