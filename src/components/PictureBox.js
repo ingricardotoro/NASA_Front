@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 import 'date-fns';
 import { format } from 'date-fns'
@@ -13,6 +17,8 @@ import '../css/picturebox.css'
 import '../css/buttoncard.css'
 import DateSelect from './DateSelect';
 import NotFound from './NotFound';
+//import ModalFavorites from './ModalFavorites';
+
 
 
 function PictureBox() {
@@ -25,6 +31,18 @@ function PictureBox() {
     const [title, setTitle] = useState('')
     const [explanation, setExplanation] = useState('')
     const [notFound, setNotFound] = useState(false)
+    const [imgFavorites, setImgFavorites] = useState([])
+    const [saved, setSaved] = useState(false)
+
+    const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+      };
 
     useEffect(() => {
 
@@ -55,10 +73,24 @@ function PictureBox() {
         nextday.setDate(nextday.getDate() + 1)
         setSelectedDate(nextday)
     }
+    const AddToFavorite =()=>{
+        
+        imgFavorites.push(
+            {
+                image,
+                date,
+                title,
+                explanation}
+        )
+       
+        localStorage.setItem('imgFavorites',JSON.stringify(imgFavorites))
+        handleOpen()
 
+    }
 
+    
     return (
-        <>
+        <> 
          <div className="row top " >
            
             <div className="column left">
@@ -68,7 +100,7 @@ function PictureBox() {
                         <ArrowBack fontSize="large" />Prev Day
                     </IconButton>
 
-                    <IconButton className="toCenter align" aria-label="Add To Favorite">
+                    <IconButton onClick={AddToFavorite} className="toCenter align" aria-label="Add To Favorite">
                          <Favorite fontSize="large" />Add to Favorite
                     </IconButton>
 
@@ -83,7 +115,7 @@ function PictureBox() {
                 :   <NotFound /> }
 
             </div>
-
+                
             <div className="column right">
                 <div className="buttoncard">
 
@@ -99,9 +131,43 @@ function PictureBox() {
             </div>
            
         </div>
+
+        <Modal
+            aria-labelledby="Save Image"
+            aria-describedby="This image has been save in Favorites"
+            className={classes.modal}
+            open={open}
+            onClose={handleClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+            timeout: 500,
+            }}
+        >
+            <Fade in={open}>
+            <div className={classes.paper}>
+                <h2 id="transition-modal-title">Image Saved</h2>
+                <p id="transition-modal-description">This image has been save in Favorites</p>
+            </div>
+            </Fade>
+      </Modal>
         
         </>
     )
 }
+
+const useStyles = makeStyles((theme) => ({
+    modal: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+  }));
 
 export default PictureBox
