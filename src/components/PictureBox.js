@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
+import Grid from '@material-ui/core/Grid';
+
+
+import {API_URL} from '../config/config'
 
 import 'date-fns';
 import { format } from 'date-fns'
@@ -36,13 +41,16 @@ function PictureBox() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
+    //function to open the modal
     const handleOpen = () => {
         setOpen(true);
     };
+    //function to close the modal
     const handleClose = () => {
         setOpen(false);
       };
 
+    //function to get the picture of they From NASA-API
     useEffect(() => {
 
         let formatdate=format(new Date(selectedDate), 'yyyy-MM-dd')  
@@ -56,34 +64,80 @@ function PictureBox() {
             setExplanation(data.explanation)
             if(data.code===400) setNotFound(true)
             else setNotFound(false)
-          //  console.log(data)
+           console.log(data)
          });
        
     }, [selectedDate])  
 
+    //Function to get the Favorites Image From Data Base
+    useEffect(async () => {
+      
+        //BY LOCALSTORAGE
+        //setFavorites(JSON.parse(localStorage.getItem('imgFavorites')))
+
+         //obtenemos el id de la moneda que viene por url
+        const res = await axios.get(API_URL+'/pictures')
+        setImgFavorites(res.data.pictures)
+
+    }, [saved])
+
+    //function to Handle the Prev Button Day
     const handlePrevDay = ()=>{
         let prevday = new Date(selectedDate)
         prevday.setDate(prevday.getDate() - 1)
         setSelectedDate(prevday)
     }
 
+    //Function tu Handle The Button of Next Day
     const handleNextDay = ()=>{
         let nextday = new Date(selectedDate)
         nextday.setDate(nextday.getDate() + 1)
         setSelectedDate(nextday)
     }
-    const AddToFavorite =()=>{
+
+    //Function to Save Favorite to DataBAse
+    const AddToFavorite = async ()=>{
         
-        imgFavorites.push(
+        //SAVE FAvoreite to LocalStorage
+        /*imgFavorites.push(
             {
                 image,
                 date,
                 title,
                 explanation}
         )
-       
-        localStorage.setItem('imgFavorites',JSON.stringify(imgFavorites))
-        handleOpen()
+        localStorage.setItem('imgFavorites',JSON.stringify(imgFavorites))*/
+
+        try {
+           
+            await axios.post(API_URL+'/pictures', {
+            url:image,
+            date,
+            title,
+            explanation
+        })
+        
+         handleOpen()
+         setSaved(!saved)
+
+        } catch (error) {
+            
+            console.log(error)
+        } 
+
+    }
+
+    //Function to Delete From Favorities
+    const DeleteFromFavorites = async(id) => {
+
+        try {
+
+            await axios.delete(API_URL+"/pictures/delete/" + id);
+            setSaved(!saved)
+
+        } catch (error) {
+            console.log(error)
+        }
 
     }
 
@@ -130,9 +184,15 @@ function PictureBox() {
             </div>
 
         </div>
+        
+        <Grid container spacing={3} className="favorites">
+        { 
+            imgFavorites.map(favorite=>(
 
-        {<Favorites />}
-
+                <Favorites DeleteFromFavorites={DeleteFromFavorites} key={favorite._id} id={favorite._id} image={favorite.url} date={favorite.date} title={favorite.title} />  
+            ))
+        }
+        </Grid>
         <Modal
             aria-labelledby="Save Image"
             aria-describedby="This image has been save in Favorites"

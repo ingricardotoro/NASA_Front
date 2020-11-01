@@ -4,30 +4,20 @@ import Picture from './Picture';
 
 import '../css/favorites.css'
 
-export default function Favorites() {
-
-    const [favorites, setFavorites] = useState([])
-    useEffect(() => {
-      
-        setFavorites(JSON.parse(localStorage.getItem('imgFavorites')))
-        
-    }, [])
+export default function Favorites(props) {
 
   return (
-    
-      <Grid container spacing={3} className="favorites">
-        {
-            favorites.map(favorite => (
-                <Grid key={favorite.title} item xs={6} sm={3}>
-                    <Picture 
-                    image={favorite.image}
-                    date={favorite.date}
-                    title={favorite.title}
-                    />
-                </Grid>
-            ))
-        } 
-      </Grid>
+        
+        <Grid key={props.title} item xs={6} sm={3}>
+            <Picture 
+            id={props.id}
+            image={props.image}
+            date={props.date}
+            title={props.title}
+            DeleteFromFavorites={props.DeleteFromFavorites}
+            />
+        </Grid>
+        
     
   );
 }
