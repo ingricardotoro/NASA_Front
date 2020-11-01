@@ -59,6 +59,8 @@ function PictureBox() {
 
     //function to get the TODAY picture of they From NASA-API
     useEffect(() => {
+
+        async function fetchData(){
         
         let SelectDate = new Date (selectedDate) 
         let formatdate=format(new Date(selectedDate), 'yyyy-MM-dd') //2020-10-31
@@ -70,6 +72,7 @@ function PictureBox() {
         let nextDay = new Date(SelectDate);
         nextDay.setDate(SelectDate.getDate() + 1); //SUN 1 NOv 
         nextDay=format(new Date(nextDay), 'yyyy-MM-dd')
+
         
         //FROM TODAY
         fetch(`https://api.nasa.gov/planetary/apod?api_key=fiM5A29M56jzWZaeNe9MZp2Wp7V7yu7jHZlqS5GS&date=${formatdate}`)
@@ -120,18 +123,26 @@ function PictureBox() {
                 setNotFound(false)
             } 
          });
+
+        }
+
+         fetchData()
        
-    }, [selectedDate])  
+    }, [selectedDate,dispatch])  
 
     //Function to get the Favorites Image From Data Base
-    useEffect(async () => {
+    useEffect( () => {
       
         //BY LOCALSTORAGE
         //setFavorites(JSON.parse(localStorage.getItem('imgFavorites')))
 
-         //Gets the pictures from Data base
-        const res = await axios.get(API_URL+'/pictures')
-        setImgFavorites(res.data.pictures)
+        //Gets the pictures from Data base
+            async function FindPictures(){
+
+                const res = await axios.get(API_URL+'/pictures')
+                setImgFavorites(res.data.pictures)
+            }
+        FindPictures()
 
     }, [saved])
 
@@ -218,7 +229,7 @@ function PictureBox() {
                     <IconButton className="toCenter align" onClick={handlePrevDay}  aria-label="Before Image">
                         <ArrowBack fontSize="large" />Prev Day
                     </IconButton>
-                    <img src={imgYesterday} width="50%" />
+                    <img alt="Prev Day" src={imgYesterday} width="50%" />
 
                     <IconButton onClick={AddToFavorite} className="toCenter align top150" aria-label="Add To Favorite">
                          <Favorite fontSize="large" />Add to Favorite
@@ -242,7 +253,7 @@ function PictureBox() {
                     <IconButton onClick={handleNextDay} className="toCenter align" aria-label="Next Image">
                          <ArrowForward fontSize="large" />Next Day
                     </IconButton>
-                    <img src={imgTomorrow} width="50%" />
+                    <img alt="Next Day" src={imgTomorrow} width="50%" />
                     
                     <div className=" toCenter align top150">
                         <DateSelect selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
