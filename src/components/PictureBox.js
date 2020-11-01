@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import {useDispatch} from 'react-redux'
 import axios from 'axios'
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -23,9 +24,12 @@ import '../css/buttoncard.css'
 import DateSelect from './DateSelect';
 import NotFound from './NotFound';
 import Favorites from './Favorites';   
+import { PrevDayAction, NextDayAction, SelectedDayAction, RemoveFromFavoritesAction, AddToFavoriteAction } from '../actions/pictureActions';
 
 
 function PictureBox() {
+
+    const dispatch = useDispatch()
 
     const today = Date.now(); 
     const [selectedDate, setSelectedDate] = useState(new Date(today))
@@ -80,6 +84,8 @@ function PictureBox() {
                 setDate(data.date) 
                 setExplanation(data.explanation)
                 setNotFound(false)
+
+                dispatch(SelectedDayAction(selectedDate, data.url, data.date,data.title,data.explanation, false))
             }
            console.log(data)
          });
@@ -123,7 +129,7 @@ function PictureBox() {
         //BY LOCALSTORAGE
         //setFavorites(JSON.parse(localStorage.getItem('imgFavorites')))
 
-         //obtenemos el id de la moneda que viene por url
+         //Gets the pictures from Data base
         const res = await axios.get(API_URL+'/pictures')
         setImgFavorites(res.data.pictures)
 
@@ -131,9 +137,12 @@ function PictureBox() {
 
     //function to Handle the Prev Button Day
     const handlePrevDay = ()=>{
+
         let prevday = new Date(selectedDate)
         prevday.setDate(prevday.getDate() - 1)
         setSelectedDate(prevday)
+        dispatch(PrevDayAction(prevday))
+        
     }
 
     //Function tu Handle The Button of Next Day
@@ -141,6 +150,7 @@ function PictureBox() {
         let nextday = new Date(selectedDate)
         nextday.setDate(nextday.getDate() + 1)
         setSelectedDate(nextday)
+        dispatch(NextDayAction(nextday))
     }
 
     //Function to Save Favorite to DataBAse
@@ -167,6 +177,7 @@ function PictureBox() {
         
          handleOpen()
          setSaved(!saved)
+         dispatch(AddToFavoriteAction(!saved))
 
         } catch (error) {
             
@@ -182,6 +193,7 @@ function PictureBox() {
 
             await axios.delete(API_URL+"/pictures/delete/" + id);
             setSaved(!saved)
+            dispatch(RemoveFromFavoritesAction(!saved))
 
         } catch (error) {
             console.log(error)

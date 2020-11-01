@@ -1,17 +1,20 @@
-
-import './css/picturebox.css';
+import {Provider} from 'react-redux'
 
 import Navbar from './components/Navbar';
 import PictureBox from './components/PictureBox';
 
+import './css/picturebox.css';
+import { store } from './store/store';
+
 function App() {
   return (
-    
-    <div className="App">
-        {<Navbar /> }
-        {<PictureBox />}
-        
-    </div>
+    <Provider store={store}>
+      <div className="App">
+          {<Navbar /> }
+          {<PictureBox />}
+          
+      </div>
+    </Provider>
   );
 }
 
