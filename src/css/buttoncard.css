@@ -21,3 +21,7 @@
 .align {
     flex: 1 !important;
 }
+
+.top150 {
+    padding-top: 150px;
+}

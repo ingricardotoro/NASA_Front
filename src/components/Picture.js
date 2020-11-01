@@ -25,8 +25,11 @@ const useStyles = makeStyles((theme) => ({
 export default function Picture({title,date,image,explanation,id, DeleteFromFavorites}) {
 
   const classes = useStyles();
+  let shortDate=''
+  if(date){
 
-  let shortDate = date.slice(0, 10);
+      shortDate = date.slice(0, 10);
+  }
 
   return (
     <Card >

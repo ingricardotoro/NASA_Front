@@ -27,7 +27,7 @@ import Favorites from './Favorites';
 
 function PictureBox() {
 
-    const today = Date.now();
+    const today = Date.now(); 
     const [selectedDate, setSelectedDate] = useState(new Date(today))
 
     const [image, setImage] = useState('')
@@ -37,6 +37,9 @@ function PictureBox() {
     const [notFound, setNotFound] = useState(false)
     const [imgFavorites, setImgFavorites] = useState([])
     const [saved, setSaved] = useState(false)
+
+    const [imgYesterday, setImgYesterday] = useState('')
+    const [imgTomorrow, setImgTomorrow] = useState('')
 
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -50,21 +53,66 @@ function PictureBox() {
         setOpen(false);
       };
 
-    //function to get the picture of they From NASA-API
+    //function to get the TODAY picture of they From NASA-API
     useEffect(() => {
-
-        let formatdate=format(new Date(selectedDate), 'yyyy-MM-dd')  
         
+        let SelectDate = new Date (selectedDate) 
+        let formatdate=format(new Date(selectedDate), 'yyyy-MM-dd') //2020-10-31
+        
+        let prevDay = new Date(SelectDate);
+        prevDay.setDate(SelectDate.getDate() -1); //FRi 30 OCT 
+        prevDay=format(new Date(prevDay), 'yyyy-MM-dd')
+      
+        let nextDay = new Date(SelectDate);
+        nextDay.setDate(SelectDate.getDate() + 1); //SUN 1 NOv 
+        nextDay=format(new Date(nextDay), 'yyyy-MM-dd')
+        
+        //FROM TODAY
         fetch(`https://api.nasa.gov/planetary/apod?api_key=fiM5A29M56jzWZaeNe9MZp2Wp7V7yu7jHZlqS5GS&date=${formatdate}`)
         .then(response => response.json())
         .then(data => {
-            setImage(data.url)
-            setTitle(data.title)
-            setDate(data.date)
-            setExplanation(data.explanation)
+           
             if(data.code===400) setNotFound(true)
-            else setNotFound(false)
+            else 
+            {
+                setImage(data.url)
+                setTitle(data.title)
+                setDate(data.date) 
+                setExplanation(data.explanation)
+                setNotFound(false)
+            }
            console.log(data)
+         });
+
+         //FROM YESTERDAY
+         fetch(`https://api.nasa.gov/planetary/apod?api_key=fiM5A29M56jzWZaeNe9MZp2Wp7V7yu7jHZlqS5GS&date=${prevDay}`)
+        .then(response => response.json())
+        .then(dataYesteday => {
+           
+            if(dataYesteday.code===404){
+                setNotFound(true)
+                setImgYesterday('https://thumbs.dreamstime.com/b/space-stars-cosmonaut-rocket-site-error-page-not-found-space-stars-cosmonaut-rocket-site-132854703.jpg')
+            } 
+            else 
+            {
+                setImgYesterday(dataYesteday.url)
+                setNotFound(false)}
+         });
+
+         //FROM TOMOROW
+         fetch(`https://api.nasa.gov/planetary/apod?api_key=fiM5A29M56jzWZaeNe9MZp2Wp7V7yu7jHZlqS5GS&date=${nextDay}`)
+        .then(response => response.json())
+        .then(dataTomorrow => {
+           
+            if(dataTomorrow.code===404) 
+            {
+                setNotFound(true)
+                setImgTomorrow('https://thumbs.dreamstime.com/b/space-stars-cosmonaut-rocket-site-error-page-not-found-space-stars-cosmonaut-rocket-site-132854703.jpg')
+            }
+            else{
+                setImgTomorrow(dataTomorrow.url)
+                setNotFound(false)
+            } 
          });
        
     }, [selectedDate])  
@@ -152,8 +200,9 @@ function PictureBox() {
                     <IconButton className="toCenter align" onClick={handlePrevDay}  aria-label="Before Image">
                         <ArrowBack fontSize="large" />Prev Day
                     </IconButton>
+                    <img src={imgYesterday} width="50%" />
 
-                    <IconButton onClick={AddToFavorite} className="toCenter align" aria-label="Add To Favorite">
+                    <IconButton onClick={AddToFavorite} className="toCenter align top150" aria-label="Add To Favorite">
                          <Favorite fontSize="large" />Add to Favorite
                     </IconButton>
 
@@ -175,8 +224,9 @@ function PictureBox() {
                     <IconButton onClick={handleNextDay} className="toCenter align" aria-label="Next Image">
                          <ArrowForward fontSize="large" />Next Day
                     </IconButton>
+                    <img src={imgTomorrow} width="50%" />
                     
-                    <div className=" toCenter align">
+                    <div className=" toCenter align top150">
                         <DateSelect selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                     </div>
 
