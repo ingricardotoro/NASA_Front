@@ -95,7 +95,7 @@ function PictureBox() {
         .then(response => response.json())
         .then(dataYesteday => {
            
-            if(dataYesteday.code===404){
+            if(dataYesteday.code===400){
                 setNotFound(true)
                 setImgYesterday('https://thumbs.dreamstime.com/b/space-stars-cosmonaut-rocket-site-error-page-not-found-space-stars-cosmonaut-rocket-site-132854703.jpg')
             } 
@@ -110,7 +110,7 @@ function PictureBox() {
         .then(response => response.json())
         .then(dataTomorrow => {
            
-            if(dataTomorrow.code===404) 
+            if(dataTomorrow.code===400) 
             {
                 setNotFound(true)
                 setImgTomorrow('https://thumbs.dreamstime.com/b/space-stars-cosmonaut-rocket-site-error-page-not-found-space-stars-cosmonaut-rocket-site-132854703.jpg')
@@ -168,17 +168,23 @@ function PictureBox() {
 
         try {
            
-            await axios.post(API_URL+'/pictures', {
+            let resp = await axios.post(API_URL+'/pictures', {
             url:image,
             date,
             title,
             explanation
         })
-        
-         handleOpen()
-         setSaved(!saved)
-         dispatch(AddToFavoriteAction(!saved))
+       console.log(resp)
+        if (resp.data.ok===true){
 
+            handleOpen()
+            setSaved(!saved)
+            dispatch(AddToFavoriteAction(!saved))
+        }
+        else{
+            console.log("Error Saveing Pictures To Favorites")
+        }
+        
         } catch (error) {
             
             console.log(error)
